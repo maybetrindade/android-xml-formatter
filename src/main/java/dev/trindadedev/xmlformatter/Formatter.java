@@ -355,62 +355,62 @@ public class Formatter extends XMLOutputter {
     }
   }
 
-@Override
-protected void printAttributes(Writer writer, List attribs, Element parent, NamespaceStack ns)
-        throws IOException {
+  @Override
+  protected void printAttributes(Writer writer, List attribs, Element parent, NamespaceStack ns)
+      throws IOException {
     List<Attribute> attributes = new ArrayList<>();
     for (Object attribObj : attribs) {
-        attributes.add((Attribute) attribObj);
+      attributes.add((Attribute) attribObj);
     }
 
     Collections.sort(
         attributes,
         (a1, a2) -> {
-            if (!a1.getNamespacePrefix().equals(a2.getNamespacePrefix())) {
-                for (String namespace : namespaceOrder) {
-                    if (a1.getNamespacePrefix().equals(namespace)) {
-                        return -1;
-                    } else if (a2.getNamespacePrefix().equals(namespace)) {
-                        return 1;
-                    }
-                }
-                if (alphabeticalNamespaces) {
-                    return a1.getNamespacePrefix().compareTo(a2.getNamespacePrefix());
-                }
+          if (!a1.getNamespacePrefix().equals(a2.getNamespacePrefix())) {
+            for (String namespace : namespaceOrder) {
+              if (a1.getNamespacePrefix().equals(namespace)) {
+                return -1;
+              } else if (a2.getNamespacePrefix().equals(namespace)) {
+                return 1;
+              }
             }
-            for (String name : attributeNameOrder) {
-                if (a1.getName().equals(name)) {
-                    return -1;
-                } else if (a2.getName().equals(name)) {
-                    return 1;
-                }
+            if (alphabeticalNamespaces) {
+              return a1.getNamespacePrefix().compareTo(a2.getNamespacePrefix());
             }
-            if (alphabeticalAttributes) {
-                return a1.getName().compareTo(a2.getName());
-            } else {
-                return 0; // Sort is stable
+          }
+          for (String name : attributeNameOrder) {
+            if (a1.getName().equals(name)) {
+              return -1;
+            } else if (a2.getName().equals(name)) {
+              return 1;
             }
+          }
+          if (alphabeticalAttributes) {
+            return a1.getName().compareTo(a2.getName());
+          } else {
+            return 0; // Sort is stable
+          }
         });
 
     for (Attribute attrib : attributes) {
-        if (attributeIndention > 0) {
-            /*
-             * Remova a chamada do newline/indent:
-             * newline(writer);
-             * indent(writer, elementDepth(parent) - 1)
-             */
-            writer.write(StringUtils.repeat(" ", attributeIndention));
-        } else {
-            writer.write(" "); 
-        }
+      if (attributeIndention > 0) {
+        /*
+         * Remova a chamada do newline/indent:
+         * newline(writer);
+         * indent(writer, elementDepth(parent) - 1)
+         */
+        writer.write(StringUtils.repeat(" ", attributeIndention));
+      } else {
+        writer.write(" ");
+      }
 
-        printQualifiedName(writer, attrib);
-        writer.write("=");
-        writer.write("\"");
-        writer.write(escapeAttributeEntities(attrib.getValue()));
-        writer.write("\"");
+      printQualifiedName(writer, attrib);
+      writer.write("=");
+      writer.write("\"");
+      writer.write(escapeAttributeEntities(attrib.getValue()));
+      writer.write("\"");
     }
-}
+  }
 
   private void printQualifiedName(Writer out, Attribute a) throws IOException {
     String prefix = a.getNamespace().getPrefix();
